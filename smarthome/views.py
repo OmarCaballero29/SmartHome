@@ -1,12 +1,14 @@
 from django.shortcuts import get_object_or_404,render
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.shortcuts import redirect 
+from django.shortcuts import redirect
+from django.forms import modelformset_factory
+from django.contrib import messages
 
-from .models import Inmueble
-from .forms import UploadImageForm, InmuebleForm
+from .models import Inmueble, Images
+from .forms import InmuebleForm, ImageForm
 
 
 # Create your views here.
@@ -20,6 +22,7 @@ def index(request):
 
 def details(request,pk):
     inmueble = get_object_or_404(Inmueble, pk=pk)
+    #images = get_object_or_404(Images, pk=pk)
     return render(request, 'smarthome/property-details.html', {'inmueble': inmueble})
 
 def search(request):
@@ -32,36 +35,38 @@ def search(request):
                     tipo_oferta__icontains=response['tipo_oferta'], 
                     direccion__icontains=response['ciudad'],
                     precio__gte=response['precio-min'], 
-                    precio__lte=response['precio-max'])
+                    precio__lte=response['precio-max']).distinct().order_by('-fecha_publicacion')
     context = {
         'search_list': search_list,
     }
     template = loader.get_template('smarthome/index.html')
     return HttpResponse(template.render(context, request))
 
-def upload_image_view(request):
-    if request.method == 'POST':
-        form = UploadImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            message = "Image uploaded succesfully!"
-    else:
-        form = UploadImageForm()
-    context = {
-        'publication': form,
-    }
-    template = loader.get_template('smarthome/upload.html')
-    return HttpResponse(template.render(context, request))
-
 def new_publication(request):
+    ImageFormSet = modelformset_factory(Images,
+                                        form=ImageForm, extra=12)
     if request.method == "POST":
         form = InmuebleForm(request.POST)
-        if form.is_valid():
+        formset = ImageFormSet(request.POST, request.FILES,
+                               queryset=Images.objects.none())
+        if form.is_valid() and formset.is_valid():
             inmueble = form.save(commit=False)
             inmueble.fecha_publicacion = timezone.now()
+            inmueble.disponible = True
             inmueble.save()
+
+            for form in formset.cleaned_data:
+                #this helps to not crash if the user   
+                #do not upload all the photos
+                if form:
+                    image = form['image']
+                    photo = Images(inmueble=inmueble, image=image)
+                    photo.save()
             return redirect('details', pk=inmueble.pk)
+        else:
+            print(form.errors, formset.errors)
     else:
         form = InmuebleForm()
-    return render(request, 'smarthome/publication_edit.html', {'form': form})
+        formset = ImageFormSet(queryset=Images.objects.none())
+    return render(request, 'smarthome/publication_edit.html', {'form': form, 'formset': formset})
 

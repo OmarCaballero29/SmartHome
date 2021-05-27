@@ -184,11 +184,11 @@
                             <label for="precio-max">Precio - Hasta</label>
                             <div class="form-group mb-0">
                                 <input name="precio-max" type="number" class="form-control rounded-0" id="precio-max"
-                                    autocomplete="off" min="0" value="10000000">
+                                    autocomplete="off" min="0" value="9999999">
                             </div>
                         </div>
-                        <div class="col-md-4 ">
-                            <input type="submit" class="btn btn-success text-white btn-block rounded-0" value="Buscar">
+                        <div class="col-md-4">
+                            <input type="submit" class="btn btn-success text-white btn-block rounded-0 mt-4" value="Buscar">
                         </div>
                     </div>
                 </form>
@@ -228,7 +228,7 @@
         </div>
     </div>
 
-    {%if latest_publish_list %}
+    {%if latest_publish_list  %}
     <div class="site-section site-section-sm bg-light">
 
         <div class="container">
@@ -239,10 +239,10 @@
                     <div class="property-entry h-100">
                         <a href="{% url 'details' pk=inmueble.pk %}" class="property-thumbnail">
                             <div class="offer-type-wrap">
-                                {%if inmueble.tipo_oferta == 'Venta'%}
+                                {%if inmueble.tipo_oferta|lower|cut:" " == 'venta'%}
                                 <span class="offer-type bg-danger">Venta</span>
                                 {% endif %}
-                                {%if inmueble.tipo_oferta == 'Renta'%}
+                                {%if inmueble.tipo_oferta|lower|cut:" " == 'renta'%}
                                 <span class="offer-type bg-success">Renta</span>
                                 {% endif %}
                             </div>
@@ -300,6 +300,7 @@
 
         </div>
     </div>
+    
     {% endif %}
 
     {% if search_list %}
@@ -313,10 +314,10 @@
                     <div class="property-entry h-100">
                         <a href="{% url 'details' pk=inmueble.pk %}" class="property-thumbnail">
                             <div class="offer-type-wrap">
-                                {%if inmueble.tipo_oferta == 'Venta'%}
+                                {%if inmueble.tipo_oferta|lower|cut:" " == 'venta'%}
                                 <span class="offer-type bg-danger">Venta</span>
                                 {% endif %}
-                                {%if inmueble.tipo_oferta == 'Renta'%}
+                                {%if inmueble.tipo_oferta|lower|cut:" " == 'renta'%}
                                 <span class="offer-type bg-success">Renta</span>
                                 {% endif %}
                             </div>
@@ -381,7 +382,7 @@
         </div>
     </div>
     {% endif %}
-
+    
 
     <div class="site-section">
         <div class="container">
