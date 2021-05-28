@@ -14,16 +14,19 @@ from .forms import InmuebleForm, ImageForm
 # Create your views here.
 def index(request):
     latest_publish_list = Inmueble.objects.order_by('-fecha_publicacion')
+    images = Images.objects.all().distinct().order_by('-inmueble_id')
+    print(images)
     template = loader.get_template('smarthome/index.html')
     context = {
         'latest_publish_list': latest_publish_list,
+        'images': images,
     }
     return HttpResponse(template.render(context, request))
 
 def details(request,pk):
     inmueble = get_object_or_404(Inmueble, pk=pk)
-    #images = get_object_or_404(Images, pk=pk)
-    return render(request, 'smarthome/property-details.html', {'inmueble': inmueble})
+    images = inmueble.images_set.all()
+    return render(request, 'smarthome/property-details.html', {'inmueble': inmueble,'images':images})
 
 def search(request):
     if request.method == "POST":
@@ -36,8 +39,11 @@ def search(request):
                     direccion__icontains=response['ciudad'],
                     precio__gte=response['precio-min'], 
                     precio__lte=response['precio-max']).distinct().order_by('-fecha_publicacion')
+    images = Images.objects.all().distinct().order_by('-inmueble_id')
+
     context = {
         'search_list': search_list,
+        'images': images,
     }
     template = loader.get_template('smarthome/index.html')
     return HttpResponse(template.render(context, request))

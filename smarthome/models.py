@@ -25,4 +25,4 @@ def get_image_filename(instance, filename):
 class Images(models.Model):
     inmueble = models.ForeignKey(Inmueble, default=None, on_delete=models.CASCADE)
     image = models.ImageField(upload_to =get_image_filename,
-                                verbose_name='Image',default='/smarthome/static/images/no-img.jpg')
+                                verbose_name='Image',default='inmuebles_images/no-img.jpg')
