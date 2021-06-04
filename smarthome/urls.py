@@ -11,4 +11,5 @@ urlpatterns = [
     path('publicacion/crear', views.new_publication, name='new_publication'),
     path('publicacion/<int:pk>/editar/', views.publication_edit, name='publication_edit'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('registro/', views.register, name='register'),
 ]

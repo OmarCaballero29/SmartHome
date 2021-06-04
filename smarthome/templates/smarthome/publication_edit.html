@@ -61,30 +61,23 @@
                                         class="icon-menu h3"></span></a></div>
 
                             <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                <li class="active">
+                                <li>
                                     <a href="{% url 'index' %}">Inicio</a>
                                 </li>
-                                <li><a href="buy.html">Comprar</a></li>
-                                <li><a href="rent.html">Rentar</a></li>
-                                <li class="has-children">
-                                    <a href="properties.html">Propiedades</a>
-                                    <ul class="dropdown arrow-top">
-                                        <li><a href="#">Condo</a></li>
-                                        <li><a href="#">Property Land</a></li>
-                                        <li><a href="#">Commercial Building</a></li>
-                                        <li class="has-children">
-                                            <a href="#">Sub Menu</a>
-                                            <ul class="dropdown">
-                                                <li><a href="#">Menu One</a></li>
-                                                <li><a href="#">Menu Two</a></li>
-                                                <li><a href="#">Menu Three</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                <li class="active">
+                                    <a href="{% url 'new_publication' %}" class="top-menu"><span
+                                            class="glyphicon glyphicon-plus"></span>Publicar</a>
                                 </li>
-                                <!-- <li><a href="blog.html">Blog</a></li> -->
-                                <li><a href="about.html">Acerca de</a></li>
                                 <li><a href="contact.html">Contacto</a></li>
+                                {% if user.is_authenticated %}
+                                <li><a disabled>Usuario: {{ user.get_username }}</a></li>
+                                <li><a href="{% url 'logout'%}?next={{request.path}}"><span
+                                            class="icon-sign-out"></span> Cerrar sesión</a></li>
+                                {% else %}
+                                <li><a href="{% url 'register' %}">Registrarse</a></li>
+                                <li><a href="{% url 'login'%}?next={{request.path}}"><span class="icon-sign-in"></span>
+                                        Iniciar sesión</a></li>
+                                {% endif %}
                             </ul>
                         </nav>
                     </div>
@@ -252,12 +245,14 @@
                 <div class="col-lg-10 col-sm-11 mx-auto bg-white">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <h2 class="text-info">Ingrese los datos solicitados</h2><hr>
+                        <h2 class="text-info">Ingrese los datos solicitados</h2>
+                        <hr>
                         {{ form.as_p }}
                         {{ formset.management_form }}
                         <h5 class="text-secondary">Adjuntar imágenes del inmueble</h5><br>
                         {{ formset.as_p }}
-                        <button type="submit" class="save btn btn-primary float-lg-right float-md-right">Publicar</button>
+                        <button type="submit"
+                            class="save btn btn-primary float-lg-right float-md-right">Publicar</button>
                     </form>
                 </div>
             </div>

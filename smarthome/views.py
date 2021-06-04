@@ -6,9 +6,10 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 from .models import Inmueble, Images
-from .forms import InmuebleForm, ImageForm
+from .forms import InmuebleForm, ImageForm, UserRegisterForm
 
 
 # Create your views here.
@@ -57,6 +58,7 @@ def new_publication(request):
                                queryset=Images.objects.none())
         if form.is_valid() and formset.is_valid():
             inmueble = form.save(commit=False)
+            inmueble.propietario = request.user
             inmueble.fecha_publicacion = timezone.now()
             inmueble.disponible = True
             inmueble.save()
@@ -88,7 +90,6 @@ def publication_edit(request, pk):
         if form.is_valid() and formset.is_valid():
             inmueble = form.save()
             formset.save()
-
             return redirect('details', pk=inmueble.pk)
         else:
             print(form.errors, formset.errors)
@@ -96,3 +97,17 @@ def publication_edit(request, pk):
         form = InmuebleForm(instance=inmueble)
         formset = ImageInLineFormSet(instance=inmueble)
     return render(request, 'smarthome/publication_edit.html', {'form': form, 'formset': formset })
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            messages.success(request, f'Usuario {username} creado con exito')
+            return redirect('login')
+    else:
+        form = UserRegisterForm()
+
+    context = {'form': form}
+    return render(request, 'smarthome/register.html', context)

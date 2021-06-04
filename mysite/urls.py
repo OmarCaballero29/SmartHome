@@ -19,7 +19,7 @@ from django.views.static import serve
 from mysite import settings
 
 urlpatterns = [
-    path('smarthome/', include('smarthome.urls')),
+    path('', include('smarthome.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     re_path(r'media/(?P<path>.*)$',serve, {'document_root':settings.MEDIA_ROOT}),

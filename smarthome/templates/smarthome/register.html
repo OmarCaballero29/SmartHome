@@ -1,0 +1,5 @@
+<form class="form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="save btn btn-primary float-lg-right float-md-right">Registrarse</button>
+</form>

@@ -1,6 +1,8 @@
 from django import forms
+from django.forms import fields
 from .models import Inmueble, Images
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class ImageForm(forms.ModelForm):
     image = forms.ImageField(label="Imagen")
@@ -31,3 +33,15 @@ class InmuebleForm(forms.ModelForm):
     habitaciones = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','min':'0','autocomplete':'off'}),label='Número de habitaciones')
     baños = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','min':'0','autocomplete':'off'}),label='Número de baños')
     descripcion = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control','autocomplete':'off'}),label='Descripción del inmueble')
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+    first_name = forms.CharField(label='Nombre(s)', widget=forms.TextInput)
+    last_name = forms.CharField(label='Apellidos', widget=forms.TextInput)
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        help_texts = {k:"" for k in fields}
