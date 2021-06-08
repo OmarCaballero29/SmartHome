@@ -12,4 +12,6 @@ urlpatterns = [
     path('publicacion/<int:pk>/editar/', views.publication_edit, name='publication_edit'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('registro/', views.register, name='register'),
+    path('<int:fav_id>/favorito/', views.favorite, name='favorite'),
+    path('favoritos/', views.list_favorites, name='favorites'),
 ]

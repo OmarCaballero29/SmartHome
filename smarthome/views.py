@@ -32,18 +32,18 @@ def search(request):
     if request.method == "POST":
         response = {}
         for key, value in request.POST.items():
-            if str(key) == 'tipo_inmueble' or str(key) == 'tipo_oferta' or str(key) == 'ciudad' or str(key) == 'precio-min' or str(key) == 'precio-max':
+            if str(key) == 'tipo_inmueble' or str(key) == 'tipo_oferta' or str(key) == 'ciudad' or str(key) == 'precio_min' or str(key) == 'precio_max':
                 response[str(key)] = str(value) 
     search_list = Inmueble.objects.filter(tipo_inmueble__icontains=response['tipo_inmueble'], 
                     tipo_oferta__icontains=response['tipo_oferta'], 
                     direccion__icontains=response['ciudad'],
-                    precio__gte=response['precio-min'], 
-                    precio__lte=response['precio-max']).distinct().order_by('-fecha_publicacion')
+                    precio__gte=response['precio_min'], 
+                    precio__lte=response['precio_max']).distinct().order_by('-fecha_publicacion')
     images = Images.objects.all().distinct().order_by('-inmueble_id')
-
     context = {
         'search_list': search_list,
         'images': images,
+        'response': response,
     }
     template = loader.get_template('smarthome/index.html')
     return HttpResponse(template.render(context, request))
@@ -111,3 +111,16 @@ def register(request):
 
     context = {'form': form}
     return render(request, 'smarthome/register.html', context)
+
+@login_required
+def favorite(request, fav_id):
+    inmueble = get_object_or_404(Inmueble, id=fav_id)
+    inmueble.favorito.add(request.user)         
+    return redirect('favorites')
+
+@login_required
+def list_favorites(request):
+    inmuebles_fav = Inmueble.objects.filter(favorito=request.user)
+    images = Images.objects.all().distinct()
+    return render(request, 'smarthome/favorites.html',{'inmuebles_fav':inmuebles_fav, 'images':images})
+

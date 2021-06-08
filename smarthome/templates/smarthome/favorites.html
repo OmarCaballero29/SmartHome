@@ -1,0 +1,76 @@
+{% extends "smarthome/base.html" %}
+
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}Lista de favoritos{% endblock %}
+
+{% block content %}
+  {% if inmuebles_fav %}
+  <div class="site-section site-section-sm bg-light">
+    <div class="container">
+      <div class="row mb-4">
+        {% for inmueble in inmuebles_fav %}
+        {% for inmueble_images in images %}
+        {% ifchanged inmueble_images.inmueble_id %}
+        {% if inmueble_images.inmueble_id == inmueble.id %}
+        <div class="col-md-12 col-lg-12 mb-4">
+          <div class="property-entry horizontal d-lg-flex">
+            <a href="{% url 'details' pk=inmueble.pk %}" class="property-thumbnail h-100">
+              <div class="offer-type-wrap">
+                {%if inmueble.tipo_oferta|lower|cut:" " == 'venta'%}
+                <span class="offer-type bg-danger">Venta</span>
+                {% endif %}
+                {%if inmueble.tipo_oferta|lower|cut:" " == 'renta'%}
+                <span class="offer-type bg-success">Renta</span>
+                {% endif %}
+              </div>
+              <img src="{{inmueble_images.image.url}}" alt="Image" class="img-fluid">
+            </a>
+            <div class="p-4 property-body">
+              <a class="property-favorite active"><span class="icon-heart-o"></span></a>
+              <h2 class="property-title"><a href="{% url 'details' inmueble.id %}">{{inmueble.tipo_inmueble}} en
+                  {{inmueble.direccion}}</a></h2>
+              <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span>
+                {{inmueble.direccion}}</span>
+              <strong
+                class="property-price text-primary mb-3 d-block text-success">${{inmueble.precio|intcomma}}</strong>
+              <ul class="property-specs-wrap mb-3 mb-lg-0">
+                <li>
+                  <span class="property-specs">Habitaciones</span>
+                  <span class="property-specs-number">{{inmueble.habitaciones}}</span>
+
+                </li>
+                <li>
+                  <span class="property-specs">Baños</span>
+                  <span class="property-specs-number">{{inmueble.baños}}</span>
+
+                </li>
+                <li>
+                  <span class="property-specs">Superficie (M<sup>2</sup>)</span>
+                  <span class="property-specs-number">{{inmueble.superficie}}</span>
+
+                </li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endifchanged %}
+        {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if not inmuebles_fav %}
+  <div class="site-section site-section-sm bg-light">
+    <div class="container">
+      <h1>No tienes inmuebles favoritos</h1>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

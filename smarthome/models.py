@@ -17,6 +17,7 @@ class Inmueble(models.Model):
     descripcion = models.TextField(blank = True)
     fecha_publicacion = models.DateTimeField(default = timezone.now)
     disponible = models.BooleanField(default = True)
+    favorito = models.ManyToManyField(User, related_name="favourite", blank=True)
 
 def get_image_filename(instance, filename):
     id = instance.inmueble.id

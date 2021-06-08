@@ -68,16 +68,22 @@
                                     <a href="{% url 'new_publication' %}" class="top-menu"><span
                                             class="glyphicon glyphicon-plus"></span>Publicar</a>
                                 </li>
-                                <li><a href="contact.html">Contacto</a></li>
                                 {% if user.is_authenticated %}
-                                <li><a disabled>Usuario: {{ user.get_username }}</a></li>
-                                <li><a href="{% url 'logout'%}?next={{request.path}}"><span
-                                            class="icon-sign-out"></span> Cerrar sesión</a></li>
+                                <li class="has-children">
+                                    <a><span class="icon-user"></span> {{ user.get_username }}</a>
+                                    <ul class="dropdown arrow-top">
+                                        <li><a href="{% url 'favorites' %}"><span class="icon-favorite"></span> Mis
+                                                favoritos</a></li>
+                                        <li><a href="{% url 'logout'%}?next={{request.path}}"><span
+                                                    class="icon-sign-out"></span> Cerrar sesión</a></li>
+                                    </ul>
+                                </li>
                                 {% else %}
                                 <li><a href="{% url 'register' %}">Registrarse</a></li>
                                 <li><a href="{% url 'login'%}?next={{request.path}}"><span class="icon-sign-in"></span>
                                         Iniciar sesión</a></li>
                                 {% endif %}
+                                <li><a href="contact.html">Contacto</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -97,7 +103,8 @@
                     <span class="d-inline-block text-white px-3 mb-3 property-offer-type rounded">Detalles del inmueble
                         en</span>
                     <h1 class="mb-2">{{ inmueble.direccion }}</h1>
-                    <p class="mb-5"><strong class="h2 text-success font-weight-bold">${{ inmueble.precio|intcomma }}</strong></p>
+                    <p class="mb-5"><strong class="h2 text-success font-weight-bold">${{ inmueble.precio|intcomma
+                            }}</strong></p>
                 </div>
             </div>
         </div>
@@ -124,17 +131,20 @@
                                 <ul class="property-specs-wrap mb-3 mb-lg-0  float-lg-right">
                                     <li>
                                         <span class="property-specs">Habitaciones</span>
-                                        <span class="property-specs-number">{{ inmueble.habitaciones }} <span class="icon-bed"></span></span>
+                                        <span class="property-specs-number">{{ inmueble.habitaciones }} <span
+                                                class="icon-bed"></span></span>
 
                                     </li>
                                     <li>
                                         <span class="property-specs">Baños</span>
-                                        <span class="property-specs-number">{{ inmueble.baños }} <span class="icon-bath"></span></span>
+                                        <span class="property-specs-number">{{ inmueble.baños }} <span
+                                                class="icon-bath"></span></span>
 
                                     </li>
                                     <li>
                                         <span class="property-specs">Superficie (M<sup>2</sup>)</span>
-                                        <span class="property-specs-number">{{ inmueble.superficie }} <span class="icon-home"></span></span>
+                                        <span class="property-specs-number">{{ inmueble.superficie }} <span
+                                                class="icon-home"></span></span>
 
                                     </li>
                                 </ul>
@@ -177,10 +187,10 @@
                 </div>
                 <div class="col-lg-4">
                     {% if user.is_authenticated %}
-                        {% if user.username == inmueble.propietario.username %}
-                        <a class="btn btn-default" href="{% url 'publication_edit' pk=inmueble.pk %}"><span
-                                class="icon-edit active"></span> Editar publicación</a>
-                        {% endif %}
+                    {% if user.username == inmueble.propietario.username %}
+                    <a class="btn btn-default" href="{% url 'publication_edit' pk=inmueble.pk %}"><span
+                            class="icon-edit active"></span> Editar publicación</a>
+                    {% endif %}
                     {% endif %}
                     <div class="bg-white widget border rounded">
 
