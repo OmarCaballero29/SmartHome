@@ -1,33 +1,31 @@
-{% if form.errors %}
-<p>Tu usuario y contraseña son incorrectos. Por favor intentalo de nuevo.</p>
-{% endif %}
+{% extends "smarthome/base.html" %}
 
-{% if next %}
-{% if user.is_authenticated %}
-<p>Tu cuenta no tiene acceso a esta página. Para continuar,
-    por favor ingresa con una cuenta que tenga acceso.</p>
-{% else %}
-<p>Por favor ingresa para ver esta página.</p>
-{% endif %}
-{% endif %}
+{% load static %}
+{% load humanize %}
 
-<form method="post" action="{% url 'login' %}">
+{%block content %}
+<form method="post" action="{% url 'login' %}" action="#" class="p-5 bg-white border">
     {% csrf_token %}
+    <div class="login">
+        <div class="row justify-content-center">
 
-    <div>
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-    </div>
-    <div>
-        <td>{{ form.password.label_tag }}</td>
-        <td>{{ form.password }}</td>
-    </div>
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% if form.errors %}
+                        <p>Your username and password didn't match. Please try again.</p>
+                        {% endif %}
 
-    <div>
-        <input type="submit" value="login" />
-        <input type="hidden" name="next" value="{{ next }}" />
+                        {% if next %}
+                        {% if user.is_authenticated %}
+                        <p>Your account doesn't have access to this page. To proceed,
+                            please login with an account that has access.</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Olvide mi contraseña</a></p>
+{% endblock %}
