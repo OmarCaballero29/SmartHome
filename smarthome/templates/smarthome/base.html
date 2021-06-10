@@ -71,7 +71,7 @@
                     <li class="has-children">
                         <a><span class="icon-user"></span> {{ user.get_username }}</a>
                         <ul class="dropdown arrow-top">
-                            <li><a href="{% url 'favorites' %}"><span class="icon-favorite"></span> Mis favoritos</a></li>
+                            <li><a href="{% url 'favorites' %}"><span class="icon-favorite"></span> Mis favoritos </a></li>
                             <li><a href="{% url 'logout'%}?next={{request.path}}"><span class="icon-sign-out"></span> Cerrar sesión</a></li>
                         </ul>
                     </li>
