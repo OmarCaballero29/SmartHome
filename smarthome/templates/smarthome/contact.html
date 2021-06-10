@@ -1,0 +1,19 @@
+{% extends "smarthome/base.html" %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title%}"Contáctanos"{% endblock %}
+
+{%block content %}
+	<div class="site.section site-section-sm pb-0">
+		<div class="container">
+			<form action="{% url 'contact' %}" class="site-section site-section-sm bg-light" id="usrform">
+  				<h3>Nombre:</h3> <input type="text" name="usrname">
+				<h3>Quejas y sugerencias</h3><textarea name="comment" form="usrform"></textarea>
+  				<input type="submit">
+			</form>
+            <h3>Teléfonos de contacto: 01 800 727</h3>
+        </div>
+	</div>
+{%endblock%}

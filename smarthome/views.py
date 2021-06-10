@@ -124,3 +124,5 @@ def list_favorites(request):
     images = Images.objects.all().distinct()
     return render(request, 'smarthome/favorites.html',{'inmuebles_fav':inmuebles_fav, 'images':images})
 
+def contact(request):
+    return render(request,'smarthome/contact.html')
