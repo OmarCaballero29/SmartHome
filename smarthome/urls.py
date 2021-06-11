@@ -14,5 +14,5 @@ urlpatterns = [
     path('registro/', views.register, name='register'),
     path('<int:fav_id>/favorito/', views.favorite, name='favorite'),
     path('favoritos/', views.list_favorites, name='favorites'),
-    path('contact/', views.contact, name='contact'),
+    path('contacto/', views.contact, name='contact'),
 ]

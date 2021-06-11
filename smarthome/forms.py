@@ -35,11 +35,12 @@ class InmuebleForm(forms.ModelForm):
     descripcion = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control','autocomplete':'off'}),label='Descripción del inmueble')
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
-    first_name = forms.CharField(label='Nombre(s)', widget=forms.TextInput)
-    last_name = forms.CharField(label='Apellidos', widget=forms.TextInput)
-    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
+    username = forms.CharField(label='Nombre de usuario',widget=forms.TextInput(attrs={'class': 'form-control','autocomplete':'off'}))
+    email = forms.EmailField(label='Correo electrónico', widget=forms.EmailInput(attrs={'type':'email', 'class': 'form-control'}))
+    first_name = forms.CharField(label='Nombre(s)',widget=forms.TextInput(attrs={'class': 'form-control','autocomplete':'off'}))
+    last_name = forms.CharField(label='Apellidos', widget=forms.TextInput(attrs={'class': 'form-control','autocomplete':'off'}))
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'class': 'form-control','autocomplete':'off'}))
+    password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput(attrs={'class': 'form-control','autocomplete':'off'}))
 
     class Meta:
         model = User
