@@ -26,7 +26,7 @@ SECRET_KEY = 'b#+e1xl+a!u_&bz_@9!8e7#i$(^xjbg*c87s7()=vzi8r!vc3k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://smarthomeproject.pythonanywhere.com']
+ALLOWED_HOSTS = ['https://smarthomeproject.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition
