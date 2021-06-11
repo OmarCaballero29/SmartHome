@@ -1,5 +1,11 @@
-<form class="form" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="save btn btn-primary float-lg-right float-md-right">Registrarse</button>
-</form>
+{% extends "smarthome/base.html"%}
+
+{%block content%}
+<div class="container" style="justify-content: center; align-items: center;">
+	<form class="form-search col-md-12" style="margin-top: -500px; background-color: #4d5157" method="POST" enctype="multipart/form-data">
+    	{% csrf_token %}
+    	{{ form.as_p }}
+    	<button type="submit" class="save btn btn-primary float-lg-right float-md-right">Registrarse</button>
+	</form>
+</div>
+{%endblock%}
