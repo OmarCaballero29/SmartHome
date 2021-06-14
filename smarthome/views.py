@@ -51,13 +51,17 @@ def search(request):
 
 @login_required
 def new_publication(request):
+    ERR = ""
     ImageFormSet = modelformset_factory(Images,
                                         form=ImageForm, max_num=12, extra=12, exclude=('inmueble',))
     if request.method == "POST":
         form = InmuebleForm(request.POST)
         formset = ImageFormSet(request.POST, request.FILES,
                                queryset=Images.objects.none())
-        if form.is_valid() and formset.is_valid():
+
+        direct = request.POST["direccion"]
+        duplicados = Inmueble.objects.filter(direccion__icontains = direct)
+        if form.is_valid() and formset.is_valid() and duplicados.count() < 1:
             inmueble = form.save(commit=False)
             inmueble.propietario = request.user
             inmueble.fecha_publicacion = timezone.now()
@@ -74,30 +78,48 @@ def new_publication(request):
             return redirect('details', pk=inmueble.pk)
         else:
             print(form.errors, formset.errors)
+            if(duplicados.count() >= 1): ERR = "La vivienda que desea ingresar ya existe"
     else:
         form = InmuebleForm()
         formset = ImageFormSet(queryset=Images.objects.none())
-    return render(request, 'smarthome/publication_edit.html', {'form': form, 'formset': formset})
+    return render(request, 'smarthome/publication_edit.html', {'form': form, 'formset': formset, 'Perror': ERR})
 
 @login_required
 def publication_edit(request, pk):
     inmueble = get_object_or_404(Inmueble, pk=pk)
     ImageInLineFormSet = inlineformset_factory(Inmueble, Images, max_num=12, exclude=('inmueble',))
+    ERR = ""
 
     if request.method == "POST":
         form = InmuebleForm(request.POST, instance=inmueble)
         formset = ImageInLineFormSet(request.POST, request.FILES, instance=inmueble)
         
-        if form.is_valid() and formset.is_valid():
+        #checa inmuebles con esa direccion
+        direct = request.POST["direccion"]
+        duplicados = Inmueble.objects.filter(direccion__icontains = direct)
+
+        user = request.user.username
+        prop = duplicados[0].propietario.username
+
+        #verifica las coincidencias
+        if (duplicados.count() < 1): coincidencia_valida = True
+        
+        #si hay coincidencias entonces checa que solo sea la del inmueble a editar
+        if(duplicados.count() == 1): 
+            coincidencia_valida = (user == prop) 
+
+        if form.is_valid() and formset.is_valid() and  coincidencia_valida:
             inmueble = form.save()
             formset.save()
             return redirect('details', pk=inmueble.pk)
         else:
             print(form.errors, formset.errors)
+            if(duplicados.count() >= 1): ERR = "La vivienda que desea ingresar ya existe"
     else:
         form = InmuebleForm(instance=inmueble)
         formset = ImageInLineFormSet(instance=inmueble)
-    return render(request, 'smarthome/publication_edit.html', {'form': form, 'formset': formset })
+
+    return render(request, 'smarthome/publication_edit.html', {'form': form, 'formset': formset, 'Perror': ERR})
 
 def register(request):
     if request.method == 'POST':
